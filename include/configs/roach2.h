@@ -339,25 +339,35 @@
   "echo"
 #define CONFIG_BOOTCOMMAND  "run flash_self"
 
-#define CONFIG_ROOTPATH "rootpath=/opt/eldk/ppc_4xxFP\0"
+#define CONFIG_ROOTPATH "rootpath=/dev/mtdblock1\0"
 #define CONFIG_BOOTFILE    "bootfile=/tftpboot/roach/uImage\0"
 
 #define CONFIG_EXTRA_ENV_SETTINGS     \
         CONFIG_BOOTFILE \
         CONFIG_ROOTPATH \
+        "preboot=run initboot\0" \
         "netdev=eth0\0" \
-        "ramargs=setenv bootargs root=/dev/ram rw\0" \
+        "bootdelay=2\0" \
+        "partitions=physmap-flash.0:4096k(linux),65536k@0x00400000(root),49152k@0x04400000(usr)," \
+        "11264k@0x07400000(bist),256k@0x07f00000(res1),256k@0x07f40000(env),512k@0x07f80000(uboot)\0" \
+        "bootargs=console=ttyS0,115200 mtdparts=${partitions} root=${rootpath}\0" \
+        "yget=loady 0x4000000\0" \
+        "newuboot=run yget;protect off 0xfffa0000 0xffffffff;era 0xfffa0000 0xffffffff;"\
+        "cp.b 0x400000 0xfffa0000 ${filesize};protect on 0xfffa0000 0xffffffff\0" \
+        "newkernel=run yget;era 0xf8000000 0xf83fffff;cp.b 0x4000000 0xf8000000 ${filesize}\0" \
+        "newroot=run yget; era 0xf8400000 0xfc3fffff; cp.b 0x4000000 0xf8400000 ${filesize}\0" \
         "addip=setenv bootargs ${bootargs} " \
          "ip=${ipaddr}:${serverip}:${gatewayip}:${netmask}" \
          ":${hostname}:${netdev}:off panic=1\0" \
         "addtty=setenv bootargs ${bootargs} console=ttyS0,${baudrate}\0" \
-        "flash_self=run ramargs addip addtty;" \
-         "bootm ${kernel_addr} ${ramdisk_addr}\0" \
-        "ethaddr=02:02:02:02:02:00\0" \
-        "kernel_addr=FC000000\0" \
-        "ramdisk_addr=FC180000\0" \
-        "clearenv=protect off FFF40000 FFF7FFFF;era FFF40000 FFF7FFFF\0" \
-        "update=protect off FFF80000 FFFFFFFF;era FFF80000 FFFFFFFF;dhcp;tftp 200000 u-boot.bin;cp.b 200000 FFF80000 80000\0" \
+        "clearenv=protect off FFF60000 FFF9FFFF;era FFF60000 FFF9FFFF\0" \
+        "initboot=echo; echo type  run netboot  to boot via dhcp+tftp+nfs; echo" \
+        "type  run soloboot  to run from flash without network; echo type  run" \
+        "run bit  to run tests; echo\0" \
+        "soloboot=setenv bootargs console=ttyS0,115200 mtdparts=\$\{partitions\}" \
+        "root=${rootpath}; bootm 0xf8000000\0" \
+        "netboot=dhcp 0x4000000; setenv bootargs console=ttyS0,115200" \
+        "mtdparts=${partitions} root=${rootpath} ip=dhcp; bootm 0x4000000\0" \
         ""
 
 
