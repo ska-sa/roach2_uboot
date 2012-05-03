@@ -346,28 +346,21 @@
         CONFIG_BOOTFILE \
         CONFIG_ROOTPATH \
         "preboot=run initboot\0" \
+        "initboot=echo; echo type  run netboot  to boot via dhcp+tftp+nfs; echo" \
+        "type  run soloboot  to run from flash without network; echo\0" \
         "netdev=eth0\0" \
         "bootdelay=2\0" \
         "partitions=physmap-flash.0:4096k(linux),65536k@0x00400000(root),49152k@0x04400000(usr)," \
         "11264k@0x07400000(bist),256k@0x07f00000(res1),256k@0x07f40000(env),512k@0x07f80000(uboot)\0" \
         "bootargs=console=ttyS0,115200 mtdparts=${partitions} root=${rootpath}\0" \
+        "clearenv=protect off fff60000 fff9ffff;era fff60000 fff9ffff\0" \
         "yget=loady 0x4000000\0" \
         "newuboot=run yget;protect off 0xfffa0000 0xffffffff;era 0xfffa0000 0xffffffff;"\
         "cp.b 0x400000 0xfffa0000 ${filesize};protect on 0xfffa0000 0xffffffff\0" \
         "newkernel=run yget;era 0xf8000000 0xf83fffff;cp.b 0x4000000 0xf8000000 ${filesize}\0" \
         "newroot=run yget; era 0xf8400000 0xfc3fffff; cp.b 0x4000000 0xf8400000 ${filesize}\0" \
-        "addip=setenv bootargs ${bootargs} " \
-         "ip=${ipaddr}:${serverip}:${gatewayip}:${netmask}" \
-         ":${hostname}:${netdev}:off panic=1\0" \
-        "addtty=setenv bootargs ${bootargs} console=ttyS0,${baudrate}\0" \
-        "clearenv=protect off FFF60000 FFF9FFFF;era FFF60000 FFF9FFFF\0" \
-        "initboot=echo; echo type  run netboot  to boot via dhcp+tftp+nfs; echo" \
-        "type  run soloboot  to run from flash without network; echo type  run" \
-        "run bit  to run tests; echo\0" \
-        "soloboot=setenv bootargs console=ttyS0,115200 mtdparts=\$\{partitions\}" \
-        "root=${rootpath}; bootm 0xf8000000\0" \
-        "netboot=dhcp 0x4000000; setenv bootargs console=ttyS0,115200" \
-        "mtdparts=${partitions} root=${rootpath} ip=dhcp; bootm 0x4000000\0" \
+        "soloboot=bootm 0xf8000000\0" \
+        "netboot=dhcp 0x4000000; setenv bootargs ${bootargs} ip=dhcp; bootm 0x4000000\0" \
         ""
 
 
