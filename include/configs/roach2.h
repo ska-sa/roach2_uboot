@@ -337,30 +337,30 @@
 #define CONFIG_PREBOOT         "echo;" \
   "echo CONFIG_PREBOOT needs to be defined;" \
   "echo"
-#define CONFIG_BOOTCOMMAND  "run flash_self"
+#define CONFIG_BOOTCOMMAND  "run soloboot"
 
 #define CONFIG_ROOTPATH "rootpath=/dev/mtdblock1\0"
-#define CONFIG_BOOTFILE    "bootfile=/tftpboot/roach/uImage\0"
+#define CONFIG_BOOTFILE    "bootfile=uImage.roach2\0" 
 
 #define CONFIG_EXTRA_ENV_SETTINGS     \
         CONFIG_BOOTFILE \
         CONFIG_ROOTPATH \
         "preboot=run initboot\0" \
-        "initboot=echo; echo type  run netboot  to boot via dhcp+tftp+nfs; echo" \
+        "initboot=echo; echo type  run netboot  to boot via dhcp+tftp+nfs; echo " \
         "type  run soloboot  to run from flash without network; echo\0" \
         "netdev=eth0\0" \
         "bootdelay=2\0" \
-        "partitions=physmap-flash.0:4096k(linux),65536k@0x00400000(root),49152k@0x04400000(usr)," \
-        "11264k@0x07400000(bist),256k@0x07f00000(res1),256k@0x07f40000(env),512k@0x07f80000(uboot)\0" \
-        "bootargs=console=ttyS0,115200 mtdparts=${partitions} root=${rootpath}\0" \
-        "clearenv=protect off fff60000 fff9ffff;era fff60000 fff9ffff\0" \
+        "bootargs=console=ttyS0,115200\0" \
+        "clearenv=protect off fff40000 fff7ffff;era fff40000 fff7ffff\0" \
         "yget=loady 0x4000000\0" \
-        "newuboot=run yget;protect off 0xfffa0000 0xffffffff;era 0xfffa0000 0xffffffff;"\
-        "cp.b 0x400000 0xfffa0000 ${filesize};protect on 0xfffa0000 0xffffffff\0" \
+        "newuboot=run yget;protect off 0xfff80000 0xffffffff;era 0xfff80000 0xffffffff;" \
+        "cp.b 0x4000000 0xfff80000 ${filesize};protect on 0xfff80000 0xffffffff\0" \
         "newkernel=run yget;era 0xf8000000 0xf83fffff;cp.b 0x4000000 0xf8000000 ${filesize}\0" \
         "newroot=run yget; era 0xf8400000 0xfc3fffff; cp.b 0x4000000 0xf8400000 ${filesize}\0" \
-        "soloboot=bootm 0xf8000000\0" \
         "netboot=dhcp 0x4000000; setenv bootargs ${bootargs} ip=dhcp; bootm 0x4000000\0" \
+        "soloboot=setenv bootargs ${bootargs} root=${rootpath};bootm 0xf8000000\0" \
+        "mmcboot=setenv bootargs ${bootargs} rootdelay=2 root=b301;bootm 0xf8000000\0" \
+        "usbboot=setenv bootargs ${bootargs} rootdelay=8 root='/dev/sda1 rw'; bootm 0xf8000000\0" \
         ""
 
 
