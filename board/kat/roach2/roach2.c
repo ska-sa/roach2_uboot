@@ -90,6 +90,8 @@ int board_early_init_f(void)
   sdr0_pfc1 = (sdr0_pfc1 & ~SDR0_PFC1_U0ME_MASK) | SDR0_PFC1_U0ME_CTS_RTS;
   sdr0_pfc1 = (sdr0_pfc1 & ~SDR0_PFC1_U1ME_MASK) | SDR0_PFC1_U1ME_CTS_RTS;
 
+  sdr0_pfc1 = (sdr0_pfc1 & ~SDR0_PFC1_DIS_MASK)  | SDR0_PFC1_DIS_UICIRQ5_SEL;
+
   mfsdr(SDR0_PFC2, sdr0_pfc2);
   sdr0_pfc2 = (sdr0_pfc2 & ~SDR0_PFC2_SELECT_MASK) |
     SDR0_PFC2_SELECT_CONFIG_4;
