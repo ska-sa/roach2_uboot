@@ -34,15 +34,45 @@
 #include <asm/io.h>
 #include <asm/bitops.h>
 #include <asm/ppc4xx-ebc.h>
+#include <i2c.h>
 
 
 #include "include/cpld.h"
+#include "include/eeprom.h"
+
 
 DECLARE_GLOBAL_DATA_PTR;
 
 extern flash_info_t flash_info[CONFIG_SYS_MAX_FLASH_BANKS]; /* info for FLASH chips */
 
 ulong flash_get_size(ulong base, int banknum);
+
+static int dump_roach2_eeprom(void)
+{
+  u8 data_buf [R2_EEPROM_AT24HC04B_SERIAL_LEN];
+  u8 mac_str[18];
+  char *s;
+
+  if (i2c_read(R2_EEPROM_AT24HC04B_U38_I2C_ADDR, R2_EEPROM_AT24HC04B_SERIAL, 1, data_buf, R2_EEPROM_AT24HC04B_SERIAL_LEN) != 0) {
+      printf("cannot read from i2c device: %02x\n", R2_EEPROM_AT24HC04B_U38_I2C_ADDR);
+      return 1;
+  }
+  printf("R2EEPROM contents\n");
+  printf("%02x:%02x:%02x:%02x:%02x\n",data_buf[0],data_buf[1],data_buf[2],data_buf[3],data_buf[4]);
+
+  /*construct mac address*/
+  sprintf(mac_str, "02:%02x:%02x:%02x:%02x:%02x", data_buf[0], data_buf[1], data_buf[2], data_buf[3], data_buf[4]);
+
+  /*check if env set else set*/
+  s = getenv("ethaddr");
+
+  if (s == NULL) {
+      printf("Setting R2EEPROM emac addr\n");
+      setenv("ethaddr", mac_str);
+   }
+
+   return 0;
+}
 
 int board_early_init_f(void)
 {
@@ -273,6 +303,9 @@ int misc_init_r(void)
   mfsdr(SDR0_SRST1, reg);    /* enable security/kasumi engines */
   reg &= ~(SDR0_SRST1_CRYP0 | SDR0_SRST1_KASU0);
   mtsdr(SDR0_SRST1, reg);
+
+  /* TODO:Setting eeprom */
+  dump_roach2_eeprom();
 
   /*
    * Clear PLB4A0_ACR[WRP]
