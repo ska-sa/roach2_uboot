@@ -85,7 +85,7 @@ int board_early_init_f(void)
   mtdcr(UIC0SR, 0xffffffff);  /* clear all */
   mtdcr(UIC0ER, 0x00000000);  /* disable all */
   mtdcr(UIC0CR, 0x00000005);  /* ATI & UIC1 crit are critical */
-  mtdcr(UIC0PR, 0xfffff7ff);  /* per ref-board manual */
+  mtdcr(UIC0PR, 0xffbff7ff);  /* per ref-board manual */
   mtdcr(UIC0TR, 0x00000000);  /* per ref-board manual */
   mtdcr(UIC0VR, 0x00000000);  /* int31 highest, base=0x000 */
   mtdcr(UIC0SR, 0xffffffff);  /* clear all */
@@ -93,7 +93,7 @@ int board_early_init_f(void)
   mtdcr(UIC1SR, 0xffffffff);  /* clear all */
   mtdcr(UIC1ER, 0x00000000);  /* disable all */
   mtdcr(UIC1CR, 0x00000000);  /* all non-critical */
-  mtdcr(UIC1PR, 0xffffffff);  /* per ref-board manual */
+  mtdcr(UIC1PR, 0xfffffeaf);  /* per ref-board manual */
   mtdcr(UIC1TR, 0x00000000);  /* per ref-board manual */
   mtdcr(UIC1VR, 0x00000000);  /* int31 highest, base=0x000 */
   mtdcr(UIC1SR, 0xffffffff);  /* clear all */
@@ -101,7 +101,7 @@ int board_early_init_f(void)
   mtdcr(UIC2SR, 0xffffffff);  /* clear all */
   mtdcr(UIC2ER, 0x00000000);  /* disable all */
   mtdcr(UIC2CR, 0x00000000);  /* all non-critical */
-  mtdcr(UIC2PR, 0xffffffff);  /* per ref-board manual */
+  mtdcr(UIC2PR, 0x7fffffff);  /* INT5 at bit 0 has polarity inverted, it is the case button */
   mtdcr(UIC2TR, 0x00000000);  /* per ref-board manual */
   mtdcr(UIC2VR, 0x00000000);  /* int31 highest, base=0x000 */
   mtdcr(UIC2SR, 0xffffffff);  /* clear all */
@@ -119,6 +119,8 @@ int board_early_init_f(void)
   sdr0_pfc1 = (sdr0_pfc1 & ~SDR0_PFC1_U0IM_MASK) | SDR0_PFC1_U0IM_4PINS;
   sdr0_pfc1 = (sdr0_pfc1 & ~SDR0_PFC1_U0ME_MASK) | SDR0_PFC1_U0ME_CTS_RTS;
   sdr0_pfc1 = (sdr0_pfc1 & ~SDR0_PFC1_U1ME_MASK) | SDR0_PFC1_U1ME_CTS_RTS;
+
+  sdr0_pfc1 = (sdr0_pfc1 & ~SDR0_PFC1_DIS_MASK)  | SDR0_PFC1_DIS_UICIRQ5_SEL;
 
   mfsdr(SDR0_PFC2, sdr0_pfc2);
   sdr0_pfc2 = (sdr0_pfc2 & ~SDR0_PFC2_SELECT_MASK) |
