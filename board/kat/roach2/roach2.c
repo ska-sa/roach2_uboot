@@ -49,29 +49,37 @@ ulong flash_get_size(ulong base, int banknum);
 
 static int dump_roach2_eeprom(void)
 {
-  u8 data_buf [R2_EEPROM_AT24HC04B_SERIAL_LEN];
-  u8 mac_str[18];
-  char *s;
+        u8 data_buf [R2_EEPROM_AT24HC04B_SERIAL_LEN];
+        u8 mac_str[18];
+        char *s;
 
-  if (i2c_read(R2_EEPROM_AT24HC04B_U38_I2C_ADDR, R2_EEPROM_AT24HC04B_SERIAL, 1, data_buf, R2_EEPROM_AT24HC04B_SERIAL_LEN) != 0) {
-      printf("cannot read from i2c device: %02x\n", R2_EEPROM_AT24HC04B_U38_I2C_ADDR);
-      return 1;
-  }
-  printf("R2EEPROM contents\n");
-  printf("%02x:%02x:%02x:%02x:%02x\n",data_buf[0],data_buf[1],data_buf[2],data_buf[3],data_buf[4]);
+        if (i2c_read(R2_EEPROM_AT24HC04B_U38_I2C_ADDR, R2_EEPROM_AT24HC04B_SERIAL, 1, data_buf, R2_EEPROM_AT24HC04B_SERIAL_LEN) != 0) {
+                printf("cannot read from i2c device: %02x\n", R2_EEPROM_AT24HC04B_U38_I2C_ADDR);
+                return 1;
+        }
 
-  /*construct mac address*/
-  sprintf(mac_str, "02:%02x:%02x:%02x:%02x:%02x", data_buf[0], data_buf[1], data_buf[2], data_buf[3], data_buf[4]);
+        if(data_buf[0] == 0xFF){
+                printf("No serial number in flash\n");
+        }
+        printf("R2EEPROM contents\n");
+#if 0
+        printf("%02x:%02x:%02x:%02x:%02x\n",data_buf[0],data_buf[1],data_buf[2],data_buf[3],data_buf[4]);
+#endif
+        /*roach user message */
+        printf("roach%d.%d batch:%d board:%d manufacturer code:%c\n",((data_buf[1]) + 1),data_buf[2],data_buf[3],data_buf[4],data_buf[0]);
 
-  /*check if env set else set*/
-  s = getenv("ethaddr");
 
-  if (s == NULL) {
-      printf("Setting R2EEPROM emac addr\n");
-      setenv("ethaddr", mac_str);
-   }
+        /*check if env set else set*/
+        s = getenv("ethaddr");
 
-   return 0;
+        if (s == NULL) {
+                printf("Setting R2EEPROM emac addr\n");
+                /*construct mac address*/
+                sprintf(mac_str, "02:%02x:%02x:%02x:%02x:%02x", data_buf[0], data_buf[1], data_buf[2], data_buf[3], data_buf[4]);
+                setenv("ethaddr", mac_str);
+        }
+
+        return 0;
 }
 
 int board_early_init_f(void)

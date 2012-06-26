@@ -328,6 +328,10 @@
  * Pass open firmware flat tree
  */
 
+/*NEW*/
+#define CONFIG_OF_CONTROL
+#define CONFIG_DEFAULT_DEVICE_TREE "roach2"
+#define CONFIG_OF_SEPARATE
 #define CONFIG_OF_LIBFDT
 #define CONFIG_OF_BOARD_SETUP
 /* Update size in "reg" property of NOR FLASH device tree nodes */
