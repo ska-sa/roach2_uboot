@@ -59,25 +59,24 @@ static int dump_roach2_eeprom(void)
         }
 
         if(data_buf[0] == 0xFF){
-                printf("No serial number in flash\n");
+                printf("WARN:   No serial number in flash\n");
         }
-        printf("R2EEPROM contents\n");
-#if 0
-        printf("%02x:%02x:%02x:%02x:%02x\n",data_buf[0],data_buf[1],data_buf[2],data_buf[3],data_buf[4]);
-#endif
+
         /*roach user message */
-        printf("roach%d.%d batch:%d board:%d manufacturer code:%c\n",((data_buf[1]) + 1),data_buf[2],data_buf[3],data_buf[4],data_buf[0]);
+        printf("SN:    ROACH%d.%d batch=%c#%d#%d\n",((data_buf[1]) + 1),data_buf[2],data_buf[0],data_buf[3],data_buf[4]);
 
 
         /*check if env set else set*/
         s = getenv("ethaddr");
 
         if (s == NULL) {
-                printf("Setting R2EEPROM emac addr\n");
+                printf("WARN:  MAC not set, deriving private MAC from serial number\n");
                 /*construct mac address*/
                 sprintf(mac_str, "02:%02x:%02x:%02x:%02x:%02x", data_buf[0], data_buf[1], data_buf[2], data_buf[3], data_buf[4]);
                 setenv("ethaddr", mac_str);
+                s = mac_str;
         }
+        printf("MAC:   %s\n", s);
 
         return 0;
 }
