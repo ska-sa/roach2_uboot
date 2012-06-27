@@ -52,9 +52,7 @@
 #define CONFIG_BOARD_EARLY_INIT_F 1  /* Call board_early_init_f  */
 #define CONFIG_MISC_INIT_R        1  /* Call misc_init_r    */
 
-#if 0
 #define CONFIG_LAST_STAGE_INIT    1  /* call last_stage_init */
-#endif
 
 /*-----------------------------------------------------------------------
  * Base addresses -- Note these are effective addresses where the actual
