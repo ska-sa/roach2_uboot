@@ -338,10 +338,10 @@
 #define CONFIG_PREBOOT         "echo;" \
   "echo CONFIG_PREBOOT needs to be defined;" \
   "echo"
-#define CONFIG_BOOTCOMMAND  "run flash_self"
+#define CONFIG_BOOTCOMMAND  "run soloboot"
 
 #define CONFIG_ROOTPATH "rootpath=/dev/mtdblock1\0"
-#define CONFIG_BOOTFILE    "bootfile=/tftpboot/roach/uImage\0"
+#define CONFIG_BOOTFILE    "bootfile=uImage\0"
 
 #define CONFIG_EXTRA_ENV_SETTINGS     \
         CONFIG_BOOTFILE \
@@ -353,9 +353,9 @@
         "bootdelay=2\0" \
         "partitions=physmap-flash.0:4096k(linux),65536k@0x00400000(root),49152k@0x04400000(usr),11264k@0x07400000(bist),256k@0x07f00000(res1),256k@0x07f40000(env),512k@0x07f80000(uboot)\0" \
         "bootargs=console=ttyS0,115200 mtdparts=${partitions} root=${rootpath}\0" \
-        "clearenv=protect off fff60000 fff9ffff;era fff60000 fff9ffff\0" \
+        "clearenv=protect off fff60000 fff7ffff;era fff60000 fff7ffff\0" \
         "yget=loady 0x4000000\0" \
-        "writeuboot=protect off 0xfffa0000 0xffffffff; era 0xfffa0000 0xffffffff; cp.b 0x400000 0xfffa0000 ${filesize}; protect on 0xfffa0000 0xffffffff\0" \
+        "writeuboot=protect off 0xfffa0000 0xffffffff; era 0xfffa0000 0xffffffff; cp.b 0x400000 0xfff80000 ${filesize}; protect on 0xfff80000 0xffffffff\0" \
         "writekernel=era 0xf8000000 0xf83fffff; cp.b 0x4000000 0xf8000000 ${filesize}\0" \
         "writeroot=era 0xf8400000 0xfc3fffff; cp.b 0x4000000 0xf8400000 ${filesize}\0" \
         "tftpuboot=dhcp; tftp 0x4000000 u-boot.bin; run writeuboot\0" \
