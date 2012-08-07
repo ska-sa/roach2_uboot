@@ -357,6 +357,7 @@
         "bootdelay=2\0" \
         "partitions=physmap-flash.0:4096k(linux),65536k@0x00400000(root),49152k@0x04400000(usr),11264k@0x07400000(bist),256k@0x07f00000(res1),256k@0x07f40000(env),512k@0x07f80000(uboot)\0" \
         "bootargs=console=ttyS0,115200 mtdparts=${partitions} root=${rootpath}\0" \
+        "bootargs1=console=ttyS0,115200 mtdparts=${partitions} root=/dev/mtdblock1\0" \
         "clearenv=protect off fff40000 fff7ffff;era fff40000 fff7ffff\0" \
         "yget=loady 0x4000000\0" \
         "writeuboot=protect off 0xfff80000 0xffffffff; era 0xfff80000 0xffffffff; cp.b 0x400000 0xfff80000 ${filesize}; protect on 0xfff80000 0xffffffff\0" \
@@ -368,7 +369,7 @@
         "newuboot=run yget; run writeuboot\0" \
         "newkernel=run yget; run writekernel\0" \
         "newroot=run yget; run writeroot\0" \
-        "soloboot=bootm 0xf8000000\0" \
+        "soloboot=setenv bootargs ${bootargs1};bootm 0xf8000000\0" \
         "netboot=dhcp 0x4000000; setenv bootargs ${bootargs} ip=dhcp; bootm 0x4000000\0" \
         "mmcboot=setenv bootargs ${bootargs} rootdelay=2 root=b301;bootm 0xf8000000\0" \
         "usbboot=setenv bootargs ${bootargs} rootdelay=8 root='/dev/sda1 rw'; bootm 0xf8000000\0" \
