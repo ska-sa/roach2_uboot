@@ -1070,6 +1070,11 @@ int flash_erase (flash_info_t * info, int s_first, int s_last)
 
 
 	for (sect = s_first; sect <= s_last; sect++) {
+		if (ctrlc()) {
+			printf("\n");
+			return 1;
+		}
+
 		if (info->protect[sect] == 0) { /* not protected */
 #ifdef CONFIG_SYS_FLASH_CHECK_BLANK_BEFORE_ERASE
 			int k;
@@ -1372,6 +1377,9 @@ int write_buff (flash_info_t * info, uchar * src, ulong addr, ulong cnt)
 		src += i;
 		cnt -= i;
 		FLASH_SHOW_PROGRESS(scale, dots, digit, i);
+		/* Only check every once in a while */
+		if ((cnt & 0xFFFF) < buffered_size && ctrlc())
+			return ERR_ABORTED;
 	}
 #else
 	while (cnt >= info->portwidth) {
@@ -1384,6 +1392,9 @@ int write_buff (flash_info_t * info, uchar * src, ulong addr, ulong cnt)
 		wp += info->portwidth;
 		cnt -= info->portwidth;
 		FLASH_SHOW_PROGRESS(scale, dots, digit, info->portwidth);
+		/* Only check every once in a while */
+		if ((cnt & 0xFFFF) < info->portwidth && ctrlc())
+			return ERR_ABORTED;
 	}
 #endif /* CONFIG_SYS_FLASH_USE_BUFFER_WRITE */
 
