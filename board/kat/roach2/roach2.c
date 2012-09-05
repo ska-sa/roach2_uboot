@@ -109,7 +109,7 @@ int board_early_init_f(void)
   mtdcr(UIC2ER, 0x00000000);  /* disable all */
   mtdcr(UIC2CR, 0x00000000);  /* all non-critical */
   mtdcr(UIC2PR, 0x6fffffff);  /* extINT5 at bit 0 has polarity inverted, it is the case button, extINT2 at bit 3 is the FPGA interrupt and is inverted */
-  mtdcr(UIC2TR, 0x90000000);  /* extINT2 from FPGA taken to be edge triggered */
+  mtdcr(UIC2TR, 0x80000000);  /* extINT2 from FPGA taken to be edge triggered */
   mtdcr(UIC2VR, 0x00000000);  /* int31 highest, base=0x000 */
   mtdcr(UIC2SR, 0xffffffff);  /* clear all */
 
