@@ -304,6 +304,11 @@ _start_440:
 	nop
 	nop
 #endif
+#if defined(CONFIG_ROACH) || defined(CONFIG_ROACH2)
+	lis	r1,0x0100 /* CCR0_DAPUIB */
+	mtspr	SPRN_CCR0,r1
+#endif
+
 	/*----------------------------------------------------------------+
 	| Core bug fix.  Clear the esr
 	+-----------------------------------------------------------------*/
