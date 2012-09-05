@@ -135,7 +135,7 @@
  * DDR2 SDRAM
  *----------------------------------------------------------------------*/
 #define CONFIG_SYS_MBYTES_SDRAM  (512)     /* 512 MB */
-#if 0
+#if 1
 #define CONFIG_DDR_DATA_EYE                /* use DDR2 optimization  */
 #define CONFIG_DRAM_TEST
 #endif
