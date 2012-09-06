@@ -303,9 +303,30 @@ _start_440:
 	nop
 	nop
 	nop
+        sync
+        sync
+        nop
+        nop
+        nop
+        sync
+        nop
+        nop
+
 #endif
 #if defined(CONFIG_ROACH) || defined(CONFIG_ROACH2)
+#if 0
 	lis	r1,0x0100 /* CCR0_DAPUIB */
+	mtspr	SPRN_CCR1,r1
+#endif
+	/*----------------------------------------------------------------*/
+	/* CCR0 init */
+	/*----------------------------------------------------------------*/
+	/* Disable store gathering & broadcast, guarantee inst/data
+	* cache block touch, force load/store alignment
+	* (see errata 1.12: 440_33)
+	*/
+	lis	r1,0x0030	/* store gathering & broadcast disable */
+	ori	r1,r1,0x6000	/* cache touch */
 	mtspr	SPRN_CCR0,r1
 #endif
 
@@ -333,16 +354,6 @@ _start_440:
 	mtspr	SPRN_MCSR,r1
 #endif
 
-	/*----------------------------------------------------------------*/
-	/* CCR0 init */
-	/*----------------------------------------------------------------*/
-	/* Disable store gathering & broadcast, guarantee inst/data
-	* cache block touch, force load/store alignment
-	* (see errata 1.12: 440_33)
-	*/
-	lis	r1,0x0030	/* store gathering & broadcast disable */
-	ori	r1,r1,0x6000	/* cache touch */
-	mtspr	SPRN_CCR0,r1
 
 	/*----------------------------------------------------------------*/
 	/* Initialize debug */

@@ -39,7 +39,7 @@
  *----------------------------------------------------------------------*/
 
 #define CONFIG_ROACH2      1    /* Board is ROACH 2 */
-#if 0 
+#if 1 
 #define CONFIG_ROACH2_REV2 1    /* Board is ROACH 2 revision 2*/
 #endif
 #define CONFIG_HOSTNAME    roach2
