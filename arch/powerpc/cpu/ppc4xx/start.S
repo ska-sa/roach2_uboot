@@ -304,11 +304,11 @@ _start_440:
 	nop
 	nop
         sync
-        sync
         nop
         nop
         nop
         sync
+        nop
         nop
         nop
 

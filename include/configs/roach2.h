@@ -39,9 +39,7 @@
  *----------------------------------------------------------------------*/
 
 #define CONFIG_ROACH2      1    /* Board is ROACH 2 */
-#if 1 
-#define CONFIG_ROACH2_REV2 1    /* Board is ROACH 2 revision 2*/
-#endif
+#define CONFIG_ROACH2_REV  2    /* Define ROACH 2 revision*/
 #define CONFIG_HOSTNAME    roach2
 #define CONFIG_440EPX      1    /* Specific PPC440EPx    */
 #define CONFIG_440         1    /* ... PPC440 family    */
@@ -365,7 +363,7 @@
         "netdev=eth0\0" \
         "bootdelay=2\0" \
         "bootargs=console=ttyS0,115200\0" \
-        "clearenv=protect off fff40000 fff7ffff;era fff40000 fff7ffff\0" \
+        "clearenv=protect off fff40000 fff7ffff;era fff40000 fff7ffff;protect on fff40000 fff7ffff" \
         "yget=loady 0x4000000\0" \
         "writeuboot=protect off 0xfff80000 0xffffffff; era 0xfff80000 0xffffffff; cp.b 0x400000 0xfff80000 ${filesize}; protect on 0xfff80000 0xffffffff\0" \
         "writekernel=era 0xf8000000 0xf83fffff; cp.b 0x4000000 0xf8000000 ${filesize}\0" \
@@ -477,7 +475,7 @@
  */
 /* test-only: take GPIO init from pcs440ep ???? in config file */
 
-#ifdef CONFIG_ROACH2_REV2
+#if CONFIG_ROACH2_REV >= 2
 
 #define CONFIG_SYS_4xx_GPIO_TABLE { /*    Out      GPIO  Alternate1  Alternate2  Alternate3 */ \
 { \
@@ -627,7 +625,7 @@
 }                      \
 }
 
-#endif /* CONFIG_ROACH2_REV2 */
+#endif /* CONFIG_ROACH2_REV */
 
 #endif /* __CONFIG_H */
 

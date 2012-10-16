@@ -263,9 +263,11 @@ int misc_init_r(void)
   mfsdr(SDR0_USB2PHY0CR, usb2phy0cr);
   mfsdr(SDR0_USB2H0CR, usb2h0cr);
 
-  /* Need to select crystal clock source */
-  usb2phy0cr = usb2phy0cr | SDR0_USB2PHY0CR_XOCLK_CRYSTAL;
   
+  usb2phy0cr = usb2phy0cr &~SDR0_USB2PHY0CR_CLKSEL_MASK;
+  usb2phy0cr = usb2phy0cr | SDR0_USB2PHY0CR_CLKSEL_48MHZ;
+  /* Need to select crystal clock source for rev 1, rev2 uses external clock*/
+  /* usb2phy0cr = usb2phy0cr | SDR0_USB2PHY0CR_XOCLK_CRYSTAL; */
   usb2phy0cr = usb2phy0cr | SDR0_USB2PHY0CR_XOCLK_EXTERNAL;
   usb2phy0cr = usb2phy0cr &~SDR0_USB2PHY0CR_WDINT_MASK;
   usb2phy0cr = usb2phy0cr | SDR0_USB2PHY0CR_WDINT_16BIT_30MHZ;
