@@ -63,7 +63,7 @@ static int dump_roach2_eeprom(void)
         }
 
         /*roach user message */
-        printf("SN:    ROACH%d.%d batch=%c#%d#%d\n",((data_buf[1]) + 1),data_buf[2],data_buf[0],data_buf[3],data_buf[4]);
+        printf("SN:    ROACH%d.%d batch=%c#%d#%d %s\n",((data_buf[1]) + 1),data_buf[2],data_buf[0],data_buf[3],data_buf[4], (data_buf[4] == CONFIG_ROACH2_REV) ?  "software fixups match" : "INCORRECT uboot loaded");
 
 
         /*check if env set else set*/
