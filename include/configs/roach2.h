@@ -363,7 +363,7 @@
         "netdev=eth0\0" \
         "bootdelay=2\0" \
         "bootargs=console=ttyS0,115200\0" \
-        "clearenv=protect off fff40000 fff7ffff;era fff40000 fff7ffff;protect on fff40000 fff7ffff" \
+        "clearenv=protect off fff40000 fff7ffff;era fff40000 fff7ffff;protect on fff40000 fff7ffff\0" \
         "yget=loady 0x4000000\0" \
         "writeuboot=protect off 0xfff80000 0xffffffff; era 0xfff80000 0xffffffff; cp.b 0x400000 0xfff80000 ${filesize}; protect on 0xfff80000 0xffffffff\0" \
         "writekernel=era 0xf8000000 0xf83fffff; cp.b 0x4000000 0xf8000000 ${filesize}\0" \
