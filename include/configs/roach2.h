@@ -375,7 +375,7 @@
         "newkernel=run yget; run writekernel\0" \
         "newroot=run yget; run writeroot\0" \
         "soloboot=setenv bootargs ${bootargs} root=/dev/mtdblock1; bootm 0xf8000000\0" \
-        "netboot=dhcp 0x4000000; setenv bootargs ${bootargs} root=${rootpath} ip=dhcp; bootm 0x4000000\0" \
+        "netboot=dhcp 0x4000000; setenv bootargs ${bootargs} root=/dev/nfs rootpath=${rootpath} ip=dhcp; bootm 0x4000000\0" \
         "mmcboot=setenv bootargs ${bootargs} rootdelay=2 root=b301;bootm 0xf8000000\0" \
         "usbboot=setenv bootargs ${bootargs} rootdelay=8 root='/dev/sda1 rw'; bootm 0xf8000000\0" \
         ""
