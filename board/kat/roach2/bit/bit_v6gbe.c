@@ -252,13 +252,9 @@ int bit_v6gbe(int which, int subtest, u32 flags) {
   int tx_loops = 0, rx_loops = 0;
   switch (subtest){
   case 0: 
-    sprintf(bit_strerr,"not implemented");
-    return -1;
-    break;
-  case 1: 
     return gbe_check_phy_status(1000000);
     break;
-  case 2: 
+  case 1: 
     while (1) {
       v6gbe_flushrx();
 
@@ -300,6 +296,10 @@ int bit_v6gbe(int which, int subtest, u32 flags) {
         return -1;
         break;
     };
+    break;
+  case 2: 
+    sprintf(bit_strerr,"not implemented");
+    return -1;
     break;
   default: 
     sprintf(bit_strerr,"subtest not supported");

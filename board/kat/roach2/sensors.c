@@ -31,7 +31,7 @@ struct max6650_config fan_config_fpga = {
   .config = R2_SENSOR_MAX6650_CFG_SCALE4 | R2_SENSOR_MAX6650_CFG_12V |
                                             R2_SENSOR_MAX6650_CFG_CLOOP,
   .gpio_config = 0xf0 | R2_SENSOR_MAX6650_GPIO0_ALERT,
-  .alarm_config = R2_SENSOR_MAX6650_ALARM_EN
+  .alarm_config = 0 //R2_SENSOR_MAX6650_ALARM_EN
 };
 
 struct max6650_config fan_config_chs0 = {

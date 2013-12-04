@@ -21,6 +21,7 @@ int v6comm_scratchtest(u32 flags)
   int i;
 
   for (i = 0; i < TEST_LEN; i++) {
+    /*printf("Writing %x to %8x\n", test_data[i], (offset + BSP_REG_SCRATCH(i)));*/
     *((volatile u32 *) (offset + BSP_REG_SCRATCH(i))) = test_data[i];
   }
 
@@ -55,6 +56,8 @@ int bit_v6comm(int which, int subtest, u32 flags)
   u32 offset = CONFIG_SYS_FPGA_BASE;
   u32 bid, maj, min, rcs;
 
+  printf("Running subtest %d\n", subtest);
+
   switch (subtest){
   case 0:
     bid = *((volatile u32 *) (offset + BSP_REG_BOARDID));
@@ -73,13 +76,17 @@ int bit_v6comm(int which, int subtest, u32 flags)
       sprintf(bit_strerr, "unsupport major revision: %x", maj);
       return -1;
     }
-    if (rcs == 0) {
+    /* RCS not supported for now */
+    if (rcs != 0) {
       sprintf(bit_strerr, "rcs revision not supported: %x", rcs);
       return -1;
     }
     break;
   case 1:
     for (i=0;i < 256; i++) {
+#if 0
+      printf("Testing scratchpad run: %d\n", i);
+#endif
       ret = v6comm_scratchtest(flags);
       if (ret)
         return -1;
@@ -93,5 +100,4 @@ int bit_v6comm(int which, int subtest, u32 flags)
 
   return ret;
 }
-
 

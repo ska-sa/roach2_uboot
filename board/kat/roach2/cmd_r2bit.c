@@ -40,13 +40,17 @@ extern int bit_zdok(int which, int subtest, u32 flags);
 extern int bit_ddr3(int which, int subtest, u32 flags);
 
 #define BIT_TESTS 6
-
-const char* tge_subtests[2] = {"phy status", "fabric counter test"}; 
-const char* v6gbe_subtests[3] = {"phy status", "sgmii status", "ping"}; 
+/* Removed non-implemented tests */
+/* const char* tge_subtests[2] = {"phy status", "fabric counter test"}; */
+const char* tge_subtests[1] = {"phy status");
+/* const char* v6gbe_subtests[3] = {"sgmii status", "ping", "phy status"}; */
+const char* v6gbe_subtests[2] = {"sgmii status", "ping"}; 
 const char* v6comm_subtests[2] = {"version check", "scratchpad access"}; 
 const char* zdok_subtests[1] = {"basic connectivity"}; 
-const char* qdr_subtests[3] = {"calibration", "ppc access", "fabric"};
-const char* ddr3_subtests[3] = {"calibration", "ppc access", "fabric"};
+/*const char* qdr_subtests[3] = {"calibration", "ppc access", "fabric"};
+const char* ddr3_subtests[3] = {"calibration", "ppc access", "fabric"};*/
+const char* qdr_subtests[2] = {"calibration", "ppc access"); 
+const char* ddr3_subtests[2] = {"calibration", "ppc access");
 
 static struct bit_mapping bit_list[BIT_TESTS] = {
   {&bit_tge, "tge", 8, 2, tge_subtests},

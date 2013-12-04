@@ -161,6 +161,8 @@ int misc_init_r(void)
   int major, minor;
 
   mtdcr(EBC0_CFGADDR, EBC0_CFG);
+
+#if 1
   mtdcr(EBC0_CFGDATA, EBC_CFG_EBTC_DRIVEN |
                       EBC_CFG_PTD_ENABLE |
                       EBC_CFG_RTC_2048PERCLK |
@@ -171,6 +173,19 @@ int misc_init_r(void)
                       EBC_CFG_EMS_MASK |
                       EBC_CFG_PME_DISABLE |
                       EBC_CFG_PMT_ENCODE(0));
+#else
+  /* Removing EBC_CFG_EBTC_DRIVEN causes the signals to be put into hiZ mode between transactions */
+  mtdcr(EBC0_CFGDATA, EBC_CFG_PTD_ENABLE |
+                      EBC_CFG_RTC_2048PERCLK |
+                      EBC_CFG_EMPH_ENCODE(3) |
+                      EBC_CFG_EMPL_ENCODE(3) |
+                      EBC_CFG_CSTC_DRIVEN |
+                      EBC_CFG_BPR_1DW |
+                      EBC_CFG_EMS_MASK |
+                      EBC_CFG_PME_DISABLE |
+                      EBC_CFG_PMT_ENCODE(0));
+#endif
+
 
 /* WARNING: resetting EBC params seems redundant, as similar is already
    done in arch/powerpc/cpu/ppc4xx/cpu_init.c
@@ -252,12 +267,15 @@ int misc_init_r(void)
           CONFIG_ENV_ADDR_REDUND + 2*CONFIG_ENV_SECT_SIZE - 1,
           &flash_info[0]);
 #endif
- 
+
+
+/* USB not working properly, removed for now */
   /*
    * USB stuff: internal phy host only
    */
 
   /* SDR Setting */
+/*
   mfsdr(SDR0_PFC1, sdr0_pfc1);
   mfsdr(SDR0_USB2D0CR, usb2d0cr);
   mfsdr(SDR0_USB2PHY0CR, usb2phy0cr);
@@ -268,6 +286,7 @@ int misc_init_r(void)
   usb2phy0cr = usb2phy0cr | SDR0_USB2PHY0CR_CLKSEL_48MHZ;
   /* Need to select crystal clock source for rev 1, rev2 uses external clock*/
   /* usb2phy0cr = usb2phy0cr | SDR0_USB2PHY0CR_XOCLK_CRYSTAL; */
+/*
   usb2phy0cr = usb2phy0cr | SDR0_USB2PHY0CR_XOCLK_EXTERNAL;
   usb2phy0cr = usb2phy0cr &~SDR0_USB2PHY0CR_WDINT_MASK;
   usb2phy0cr = usb2phy0cr | SDR0_USB2PHY0CR_WDINT_16BIT_30MHZ;
@@ -282,6 +301,7 @@ int misc_init_r(void)
    * An 8-bit/60MHz interface is the only possible alternative
    * when connecting the Device to the PHY
    */
+/*   
   usb2h0cr   = usb2h0cr &~SDR0_USB2H0CR_WDINT_MASK;
   usb2h0cr   = usb2h0cr | SDR0_USB2H0CR_WDINT_16BIT_30MHZ;
 
@@ -289,6 +309,7 @@ int misc_init_r(void)
    * To enable the USB 2.0 Device function
    * through the UTMI interface
    */
+/*
   usb2d0cr = usb2d0cr &~SDR0_USB2D0CR_USB2DEV_EBC_SEL_MASK;
   usb2d0cr = usb2d0cr | SDR0_USB2D0CR_EBC_SELECTION;
 
@@ -299,7 +320,6 @@ int misc_init_r(void)
   mtsdr(SDR0_USB2D0CR, usb2d0cr);
   mtsdr(SDR0_USB2PHY0CR, usb2phy0cr);
   mtsdr(SDR0_USB2H0CR, usb2h0cr);
-
   /* TODO: check reset scheme board/lwmon5/lwmon5.c has another take */
 
   /*clear resets*/
