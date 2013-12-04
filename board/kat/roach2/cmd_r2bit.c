@@ -53,12 +53,12 @@ const char* qdr_subtests[2] = {"calibration", "ppc access"};
 const char* ddr3_subtests[2] = {"calibration", "ppc access"};
 
 static struct bit_mapping bit_list[BIT_TESTS] = {
-  {&bit_tge, "tge", 8, 2, tge_subtests},
-  {&bit_v6gbe, "v6gbe", 1, 3, v6gbe_subtests},
+  {&bit_tge, "tge", 8, 1, tge_subtests},
+  {&bit_v6gbe, "v6gbe", 1, 2, v6gbe_subtests},
   {&bit_v6comm, "v6comm", 1, 2, v6comm_subtests},
   {&bit_zdok, "zdok", 2, 1, zdok_subtests},
-  {&bit_qdr, "qdr", 4, 3, qdr_subtests},
-  {&bit_ddr3, "ddr3", 1, 3, ddr3_subtests},
+  {&bit_qdr, "qdr", 4, 2, qdr_subtests},
+  {&bit_ddr3, "ddr3", 1, 2, ddr3_subtests},
 };
 
 char bit_strerr[256];
