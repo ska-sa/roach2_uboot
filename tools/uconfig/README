@@ -1,0 +1,12 @@
+Roach 2 U-Boot environment variable print/set (uconfig)
+-------------------------------------------------------
+
+The uconfig application can print/set roach 2 u-boot
+environment variables from flash.
+
+NOTE: This application is similar to /u-boot/tools/env/.
+
+Dependencies
+1. katcp library
+    https://casper.berkeley.edu/wiki/KATCP
+    https://github.com/ska-sa/katcp_devel
