@@ -223,6 +223,8 @@
 #define CONFIG_SYS_FLASH_EMPTY_INFO        /* print 'E' for empty sector on flinfo */
 #define CONFIG_SYS_FLASH_QUIET_TEST  1  /* don't warn upon unknown flash      */
 
+#define CONFIG_SYS_FLASH_CHECK_BLANK_BEFORE_ERASE /* check for blank before erase */
+
 #define CONFIG_ENV_IS_IN_FLASH 1
 #define CONFIG_ENV_OVERWRITE 1 /* allows eth addr to be set */
 
