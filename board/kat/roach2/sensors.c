@@ -68,14 +68,14 @@ struct max1805_config remote_config = {
 
 struct ad7414_config ambient0_config = {
   .config = AD7414_CFG_IICFLTR | AD7414_CFG_ALRMRST,
-  .max = 40,
-  .min = 0
+  .max = 55,
+  .min = 50
 };
 
 struct ad7414_config ambient1_config = {
   .config = AD7414_CFG_IICFLTR | AD7414_CFG_ALRMRST,
-  .max = 40,
-  .min = 0
+  .max = 55,
+  .min = 50 
 };
 
 struct max16071_config vmon_config = {
