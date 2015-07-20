@@ -96,7 +96,8 @@ struct max16071_config vmon_config = {
       MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6,
       MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6
     },
-  .mon_config = 0xee
+  .mon_config = 0xee,
+  .fault = {0xff, 0x30, 0x01}
   };
 
 struct max16071_config cmon_config = {
@@ -117,7 +118,8 @@ struct max16071_config cmon_config = {
       MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6,
       MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6
     },
-  .mon_config = 0xee
+  .mon_config = 0xee,
+  .fault = {0x7f, 0x30, 0x01}
   };
 
 static int sensor_write(u8 addr, u8 reg, u8 val)
@@ -174,6 +176,22 @@ int max16071_config(int addr, struct max16071_config* maxc)
   }
 
   if (sensor_write(addr, MAX16071_REG_FLASH, 0x3)) {
+    return -1;
+  }
+
+  if (sensor_write(addr, MAX16071_REG_CMONCONFIG, maxc->cmon_config)) {
+    return -1;
+  }
+
+  if (sensor_write(addr, MAX16071_REG_FAULT_DEPENDENCY_0, maxc->fault[0])) {
+    return -1;
+  }
+
+  if (sensor_write(addr, MAX16071_REG_FAULT_DEPENDENCY_1, maxc->fault[1])) {
+    return -1;
+  }
+
+  if (sensor_write(addr, MAX16071_REG_FAULT_DEPENDENCY_2, maxc->fault[2])) {
     return -1;
   }
 

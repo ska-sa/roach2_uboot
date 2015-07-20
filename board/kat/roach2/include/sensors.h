@@ -97,6 +97,10 @@ struct ad7414_config {
 #define MAX16071_REG_CMON   0x18
 #define MAX16071_REG_GPIOI  0x1e
 
+#define MAX16071_REG_FAULT_DEPENDENCY_0 0x36
+#define MAX16071_REG_FAULT_DEPENDENCY_1 0x37
+#define MAX16071_REG_FAULT_DEPENDENCY_2 0x3a
+
 #define MAX16071_REG_GPIOCONF0 0x3f
 #define MAX16071_REG_GPIOCONF1 0x40
 #define MAX16071_REG_GPIOCONF2 0x41
@@ -126,6 +130,7 @@ struct max16071_config {
   u8 chan_config[MAX16071_CHANCNT];
   u8 en_config;
   u8 mon_config;
+  u8 fault[3];
 };
 
 #define MAX16071_EN_SW 0x1
