@@ -94,19 +94,23 @@ struct ad7414_config {
 
 #define MAX16071_REG_EN 0x73
 
-#define MAX16071_REG_CMON 0x18
-#define MAX16071_REG_GPIOI 0x1e
+#define MAX16071_REG_CMON   0x18
+#define MAX16071_REG_GPIOI  0x1e
 
 #define MAX16071_REG_GPIOCONF0 0x3f
 #define MAX16071_REG_GPIOCONF1 0x40
 #define MAX16071_REG_GPIOCONF2 0x41
-#define MAX16071_REG_GPIOOTYPE 0x42
 
 #define MAX16071_REG_GPIOOTYPE 0x42
 
 #define MAX16071_REG_SUV(x) (0x48 + 3*(x))
-#define MAX16071_REG_OV(x) (0x49 + 3*(x))
-#define MAX16071_REG_UV(x) (0x4a + 3*(x))
+#define MAX16071_REG_OV(x)  (0x49 + 3*(x))
+#define MAX16071_REG_UV(x)  (0x4a + 3*(x))
+
+#define MAX16071_REG_OC     0x6c
+#define MAX16071_REG_FLASH  0x6d
+
+#define MAX16071_REG_MON_CONFIG 0x7e
 
 #define MAX16071_REG_CMONCONFIG 0x47
 
@@ -117,9 +121,11 @@ struct max16071_config {
   u8 ov[MAX16071_CHANCNT];
   u8 uv[MAX16071_CHANCNT];
   u8 suv[MAX16071_CHANCNT];
+  u8 oc;
   u8 cmon_config;
   u8 chan_config[MAX16071_CHANCNT];
   u8 en_config;
+  u8 mon_config;
 };
 
 #define MAX16071_EN_SW 0x1
@@ -133,7 +139,7 @@ struct max16071_config {
 #define MAX16071_GPIO_OTYPE_ODRAIN 0x1
 
 #define MAX16071_CMON_EN 0x1
-#define MAX16071_CMON_RANGE16V (0x1 << 1)  
+#define MAX16071_CMON_RANGE14V (0x1 << 1)
 
 #define MAX16071_CMON_GAIN48 (0x3 << 2)
 

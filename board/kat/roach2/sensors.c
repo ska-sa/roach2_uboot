@@ -75,43 +75,49 @@ struct ad7414_config ambient0_config = {
 struct ad7414_config ambient1_config = {
   .config = AD7414_CFG_IICFLTR | AD7414_CFG_ALRMRST,
   .max = 55,
-  .min = 50 
+  .min = 50
 };
 
 struct max16071_config vmon_config = {
   .en_config = MAX16071_EN_SW,
   /* first is fault all others input */
-  .gpio_function = 0x0, // MAX16071_GPIO_FUNC(MAX16071_GPIO_FUNC_FAULTANY, 0x0),
+  .gpio_function = MAX16071_GPIO_FUNC(MAX16071_GPIO_FUNC_FAULTANY, 0x0),
   /* first is open drain, dont care for others */
   .gpio_out_type = MAX16071_GPIO_OTYPE_ODRAIN,
-  /* disable all over voltage checks */
-  .ov = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff},
-  /* disable all under voltage checks */
-  .uv = {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
+  /* over- and under-voltage thresholds */
+  .ov = {0x32, 0x4b, 0x5a, 0x7d, 0xa5, 0xfa, 0xde, 0xa5},
+  .uv = {0x28, 0x3d, 0x49, 0x66, 0x87, 0xcc, 0x94, 0x87},
+  /* disable secondary threshold */
   .suv = {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
-  .cmon_config = MAX16071_CMON_EN | MAX16071_CMON_RANGE16V | MAX16071_CMON_GAIN48,
+  /* secondary overcurrent threshold */
+  .oc = 0xda,
+  .cmon_config = 0x0b,
   .chan_config = {
       MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6,
       MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6
     },
+  .mon_config = 0xee
   };
 
 struct max16071_config cmon_config = {
   .en_config = MAX16071_EN_SW,
   /* first is fault all others input */
-  .gpio_function = 0x0, // MAX16071_GPIO_FUNC(MAX16071_GPIO_FUNC_FAULTANY, 0x0),
+  .gpio_function = MAX16071_GPIO_FUNC(MAX16071_GPIO_FUNC_FAULTANY, 0x0),
   /* first is open drain, dont care for others */
   .gpio_out_type = MAX16071_GPIO_OTYPE_ODRAIN,
-  /* disable all over voltage checks */
-  .ov = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff},
-  /* disable all under voltage checks */
-  .uv = {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
+  /* over- and under-voltage thresholds */
+  .ov = {0x48, 0xa5, 0x17, 0x73, 0x18, 0xff, 0xfa, 0xff},
+  .uv = {0x0, 0x0, 0x0, 0x0, 0x0, 0x24, 0xcc, 0x0},
+  /* secondary overcurrent threshold */
   .suv = {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
-  .cmon_config = MAX16071_CMON_EN | MAX16071_CMON_RANGE16V | MAX16071_CMON_GAIN48,
+  /* secondary overcurrent threshold */
+  .oc = 0x2b,
+  .cmon_config = 0x0d,
   .chan_config = {
       MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6,
       MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6
     },
+  .mon_config = 0xee
   };
 
 static int sensor_write(u8 addr, u8 reg, u8 val)
@@ -163,8 +169,23 @@ int max16071_config(int addr, struct max16071_config* maxc)
     }
   }
 
+  if (sensor_write(addr, MAX16071_REG_OC, maxc->oc)) {
+    return -1;
+  }
+
+  if (sensor_write(addr, MAX16071_REG_FLASH, 0x3)) {
+    return -1;
+  }
+
   if (sensor_write(addr, MAX16071_REG_CMONCONFIG, maxc->cmon_config)) {
     return -1;
+  }
+
+  /* monitor configuration */
+  for (i=0; i < 4; i++) {
+    if (sensor_write(addr, MAX16071_REG_MON_CONFIG + i, maxc->mon_config)) {
+      return -1;
+    }
   }
 
   for (i=0; i < MAX16071_CHANCNT; i++) {
