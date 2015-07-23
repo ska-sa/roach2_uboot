@@ -59,7 +59,7 @@ struct max6650_config fan_config_chs2 = {
 };
 
 struct max1805_config remote_config = {
-  .config = 0x0,
+  .config = 0x80, /* 2015-07-22 by SteveD - changed from 0x0 to 0x80 to mask all ALERT interupts, since the driver cannot clear them anyway */
   .local_max = 45,
   .local_min = 0,
   .remote_max = {120, 80}, /* PPC [invalid faults need to be ignored], FPGA */
