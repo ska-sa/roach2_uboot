@@ -112,7 +112,7 @@ struct max16071_config cmon_config = {
   /* secondary overcurrent threshold */
   .suv = {0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0},
   /* secondary overcurrent threshold */
-  .oc = 0x2b,
+  .oc = 0x54,
   .cmon_config = 0x0d,
   .chan_config = {
       MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6, MAX16071_CHAN_FS5V6,
